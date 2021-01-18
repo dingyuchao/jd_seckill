@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/Albert-Zhan/httpc"
 	"github.com/PuerkitoBio/goquery"
+	"github.com/giant-stone/go/gutil"
 	"github.com/tidwall/gjson"
 	"log"
 	"net/http"
@@ -222,7 +223,10 @@ func (this *Seckill) SubmitSeckillOrder() bool {
 		log.Println(fmt.Sprintf("抢购成功，订单号:%s, 总价:%s, 电脑端付款链接:%s",orderId,totalMoney,payUrl))
 		if this.conf.Read("messenger","enable")=="true" && this.conf.Read("messenger","type")=="smtp" {
 			email:=service.NerEmail(this.conf)
-			_=email.SendMail([]string{this.conf.Read("messenger","email")},"茅台抢购通知",fmt.Sprintf("抢购成功，订单号:%s, 总价:%s, 电脑端付款链接:%s",orderId,totalMoney,payUrl))
+			msg := fmt.Sprintf("抢购成功，订单号:%s, 总价:%s, 电脑端付款链接:%s",orderId,totalMoney,payUrl)
+			_=email.SendMail([]string{this.conf.Read("messenger","email")},"茅台抢购通知",msg)
+
+			service.NotifyUser(this.conf.Read("pushmsg", "token"), msg)
 		}
 		return true
 	}else{
