@@ -72,6 +72,7 @@
     - 定时自动预约
 - 秒杀预约后等待抢购
     - 定时开始自动抢购
+- (可选)抢购成功通过[sre24一键免费推送消息到手机](https://sre24.com)提醒用户
 
 ## 支持系统
 
@@ -107,14 +108,20 @@
 (4)修改抢购瓶数
 > 可在配置文件中找到seckill_num进行修改
 
+(5)(可选)设置抢购成功后微信通知
+> https://sre24.com 微信扫码免费登录-设置页面得到 token，填好配置文件 token = 获得的值
+
 #### 4.运行软件
 软件运行需要扫码登录，登录后自动预约和抢购。记得运行前修改配置文件。
 
 - *Linux下命令行方式显示二维码（以Ubuntu为例）*
 
+需要 Go 1.13+ 以上版本
+
 ```bash
 $ sudo apt-get install qrencode zbar-tools # 安装二维码解析和生成的工具，用于读取二维码并在命令行输出。
 $ zbarimg qr_code.png > qrcode.txt && qrencode -r qrcode.txt -o - -t UTF8 # 解析二维码输出到命令行窗口。
+$ go build -o jd_seckill main.go
 ```
 
 #### 5.抢购结果确认
